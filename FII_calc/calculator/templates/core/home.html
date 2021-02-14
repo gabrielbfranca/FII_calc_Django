@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+             content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <title>Calculadora de FII</title>
+    <style>
+        * {
+            margin:0%;
+            font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+            box-sizing: border-box;
+
+        }
+
+        #main {
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input[type='text'] {
+            width: 30%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 2px solid black;
+        }
+
+        input[type='submit'] {
+            width: 30%;
+            padding: 5px;
+            background: black;
+            color: white;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <h1>Calcule um FII</h1>
+    <form method="GET">
+        <div>
+            <label for="Calcular"></label>
+            <input type="text" id="city" value="{{ request.GET.ticker }}" placeholder="Daqui a quantos anos deseja viver de renda?" name="tempo"/><br>
+            <input type="text" id="city" value="{{ request.GET.tempo }}" placeholder="Daqui a quantos anos deseja viver de renda?" name="tempo"/><br>
+            <input type="text" id="city" value="{{ request.GET.Capital }}" placeholder="Quanto está disposto a investir" name="Capital"/><br>
+            <input type="text" id="city" value="{{ request.GET.renda }}" placeholder="Quanto está disposto a receber em renda por mês?" name="Capital"/><br>
+        </div>
+        <input type="submit" value="Submit"/>
+    </form>
+    {% if calculado %}
+        {% if dado == 1 %}
+        <h3>Renda média:{{ calculado.renda }}</h3>
+        {% endif %}
+        {% if dado == 2 %}
+        <h3>Tempo necessário:{{ calculado.t }}</h3>
+        {% endif %}
+        {% if dado == 3 %}
+        <h3>Capital necessário: {{ calculado.C }}</h3>
+        {% endif %}
+    {% endif %}
+</div>
+
+</body>
+</html>

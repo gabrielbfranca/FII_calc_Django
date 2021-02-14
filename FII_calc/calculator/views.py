@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from bs4 import BeautifulSoup(html_content, "html.parser")
+from bs4 import BeautifulSoup
 import requests
 # Create your views here.
 siglas = ['ABCP11', 'AFCR11', 'AFHI11', 'AFOF11', 'AIEC11', 'ALMI11', 'ALZR11', 'ANCR111', 'AQLL11', 'ARCT11', 'ARFI111', 'ARRI11',
@@ -268,26 +268,69 @@ def get_html_content(tag):
     html_content = requests.get("https://www.fundsexplorer.com.br/funds/" + str(tag))
     return html_content
 
-def calculator( renda, t, C):
-    html_content = get_html_content(tag)
+def calculator( ticker, renda=None, t=None, C=None):
+    html_content = get_html_content(ticker)
     soup = BeautifulSoup(html_content.text, "html.parser")
 
     result = dict()
     result["preco"] = float(new_soup.find("span", attrs={"class":"price"}).text.replace('\n', '').replace("R$","").replace(" ", "").replace(",", "."))
     result["dividendos"] = float(new_soup.find_all("span", attrs={"class":"indicator-value"})[1].text.replace("R$", "").replace(" ", "").replace(",", "."))
-    
-    renda = t * (result["dividends"]/result["preco"]) * C
-    return renda
+    if renda == None:
+        result["renda"] = 12 * t * (result["dividends"]/result["preco"]) * C
 
-def validar_tag():
-    pass
+    elif t == None:
+
+        result["t"] = (renda/((result["dividends"]/result["preco"]) * C))/12
+
+    elif C == None:
+
+        result["C"] = renda / (12 * t * (result["dividends"]/result["preco"]))
+
+    return result
+
+def detect_and_validate_empty_value(renda=0, t=0, C=0):
+    dado = 0
+    if C + t + renda == 0:
+        return True
+    elif C + t ==0 or C + renda == 0 or renda + t == 0:
+        return True
+
+    if renda == 0:
+        dado = 1
+    elif t == 0:
+        dado = 2
+    elif C == 0:
+        dado = 3
+    return dado, False
+    
+
+    
+
+def validar_tag(tag):
+    if tag in siglas:
+        return True
+    else:
+        return False
 
 
 
 def home(request):
-    if "city" in request.GET:
+    calculado = None
+    dado = None
+    
+    if "ticker" in request.GET:
         # fetch weather data
-        tag = request.GET.get("city")
-        validar_tag(tag)
-        calculado = calculator()
-    return render(request, "core/home.html", {'calculado': calculado})
+        tag = request.GET.get("ticker")
+        renda = request.GET.get("renda")
+        t = request.GET.get("tempo")
+        C = request.GET.get("Capital")
+        if detect_empty_value(preco, t, C):
+            pass # send message error
+
+
+        if validar_tag(tag) == False:
+            pass # send message error to html 
+        else:
+            calculado = calculator(tag, preco, t, C)
+    return render(request, "core/home.html", {'calculado': calculado}, {'dado': dado})
+    
