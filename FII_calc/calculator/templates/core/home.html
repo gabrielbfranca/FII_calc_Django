@@ -49,23 +49,25 @@
     <form method="GET">
         <div>
             <label for="Calcular"></label>
-            <input type="text" id="city" value="{{ request.GET.ticker }}" placeholder="Daqui a quantos anos deseja viver de renda?" name="tempo"/><br>
-            <input type="text" id="city" value="{{ request.GET.tempo }}" placeholder="Daqui a quantos anos deseja viver de renda?" name="tempo"/><br>
-            <input type="text" id="city" value="{{ request.GET.Capital }}" placeholder="Quanto está disposto a investir" name="Capital"/><br>
-            <input type="text" id="city" value="{{ request.GET.renda }}" placeholder="Quanto está disposto a receber em renda por mês?" name="Capital"/><br>
+            <input type="text" id="ticker" value="{{ request.GET.ticker }}" placeholder="Qual FII" name="ticker"/><br>
+            <input type="text" id="tempo" value="{{ request.GET.tempo }}" placeholder="Daqui a quantos anos deseja viver de renda?" name="tempo"/><br>
+            <input type="text" id="Capital" value="{{ request.GET.Capital }}" placeholder="Quanto está disposto a investir" name="Capital"/><br>
+            <input type="text" id="renda" value="{{ request.GET.renda }}" placeholder="Quanto está disposto a receber em renda por mês?" name="renda"/><br>
         </div>
         <input type="submit" value="Submit"/>
     </form>
     {% if calculado %}
-        {% if dado == 1 %}
+        {% if calculado.dado == 1 %}
         <h3>Renda média:{{ calculado.renda }}</h3>
         {% endif %}
-        {% if dado == 2 %}
+        {% if calculado.dado == 2 %}
         <h3>Tempo necessário:{{ calculado.t }}</h3>
         {% endif %}
-        {% if dado == 3 %}
-        <h3>Capital necessário: {{ calculado.C }}</h3>
+        {% if calculado.dado == 3 %}
+        <h3>Capital necessário: {{ calculado.C}}</h3>
         {% endif %}
+    {% else %}
+    <h3>ERRO!!</h3>
     {% endif %}
 </div>
 
